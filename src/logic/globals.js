@@ -1,0 +1,3 @@
+var assets = {};
+
+export { assets };

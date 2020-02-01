@@ -31,23 +31,30 @@
   justify-content: flex-end;
 }
 
-@media only screen and (max-aspect-ratio: 1;) {
+@media (max-aspect-ratio: 1/1) {
   .menu-centered {
     width: 100%;
     margin: 0;
   }
 }
 
+.menu-main-logo {
+   margin-bottom: auto;
+}
+
 .menu-horizontal-button {
-  margin: 1em 0;
+  margin: 1em 0 0 0;
+  border: none;
   box-sizing: content-box;
-  border-width: 0 10px;
-  border-style: solid;
-  border-image: url(/assets/textures/gui/horizontal-button.jpeg) 0 10 stretch;
-  background-image: url(/assets/textures/gui/horizontal-button.jpeg);
+  background-image: url(../assets/textures/gui/horizontal-button.svg);
   background-size: 100% 100%;
+  background-color: transparent;
   padding: 0.5em;
-  width: 100%;
   font: inherit;
   color: inherit;
+  transition: transform 0.3s;
+}
+
+.menu-horizontal-button:hover, .menu-horizontal-button:active {
+  transform: scale(110%);
 }

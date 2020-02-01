@@ -1,3 +1,4 @@
+import { assets } from "../logic/globals.js";
 const {
 	Mesh,
 	RepeatWrapping,
@@ -14,10 +15,11 @@ var Water = function ( geometry, options ) {
 
 	var scope = this;
 
-	var textureLoader = new TextureLoader();
-
-	var flowMap = options.flowMap || undefined;
-	var map = options.normalMap0 || textureLoader.load( '/assets/textures/water/Water_1_M_Normal.jpg' );
+	var flowMap = undefined;
+	if (!assets.water) {
+		assets.water = (new THREE.TextureLoader()).load("./assets/textures/water/Water_1_M_Normal.jpg");
+	}
+	var map = assets.water;
   map.wrapS = THREE.RepeatWrapping;
   map.wrapT = THREE.RepeatWrapping;
 

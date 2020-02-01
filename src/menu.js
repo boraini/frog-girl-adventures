@@ -1,22 +1,29 @@
-import { MenuBackground } from "./menubg.js";
-import { MenuForeground } from "./menufg.js";
+var assets = {};
+
+import { MenuBackground } from "./logic/menubg.js";
+import { goToPage } from "./logic/menufg.js";
 
 var bg = new MenuBackground();
 var bgelem;
 var dispbox = document.getElementById("display");
 console.log(dispbox);
-function rnsetup() {
+function menusetup() {
   console.log("started loop");
   bg.init();
   bgelem = bg.renderer.domElement;
   dispbox.appendChild(bgelem);
   bgelem.className = "background";
   windowResizeHandler();
-  requestAnimationFrame(rnloop);
+  requestAnimationFrame(menuloop);
 }
-function rnloop() {
-  bg.render();
-  requestAnimationFrame(rnloop);
+var lastt = 0;
+function menuloop(t = 0) {
+  //throttle menu render at ~30fps
+  if (t - lastt > 33) {
+    bg.render();
+    lastt = t;
+  }
+  requestAnimationFrame(menuloop);
 }
 function windowResizeHandler() {
   var rect = dispbox.getBoundingClientRect() || {width: 800, height: 600};
@@ -30,6 +37,10 @@ try {
 catch (e) {
   window.addEventListener("resize", windowResizeHandler);
 }
+function menumain() {
+  goToPage("main");
+  menusetup();
+  menuloop();
+}
 
-rnsetup();
-rnloop();
+menumain();

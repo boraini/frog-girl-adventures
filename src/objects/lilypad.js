@@ -1,10 +1,16 @@
 //import  {MeshStandardMaterial} from "../modules/three.module.js";
-const MeshStandardMaterial = THREE.MeshStandardMaterial;
 import { GLTFLoader } from "../modules/GLTFLoader.js";
+import { assets } from "../logic/globals.js";
+const MeshStandardMaterial = THREE.MeshStandardMaterial;
 
 function Lilypad(callback) {
-  var loader = new GLTFLoader();
-  loader.load("../../assets/models/lilypad.glb", loaded.bind(null, callback), null, console.error);
+  if (assets.lilypad) {
+    callback(assets.lilypad);
+  }
+  else {
+    var loader = new GLTFLoader();
+    loader.load("./assets/models/lilypad.glb", loaded.bind(null, callback), null, console.error);
+  }
 }
 
 function loaded(callback, imported) {
@@ -19,6 +25,7 @@ function loaded(callback, imported) {
   interest.material = new MeshStandardMaterial( {
     roughness: 0.8, metalness: 0.4, color: 0x006633
   } );
+  assets.lilypad = interest;
   callback(interest);
 }
 
