@@ -11,19 +11,9 @@ function MenuBackground() {
     flowY: 1
   };
 
-  function addLilies(object) {
-    this.lilypad = object;
-    this.lilypads.push(object);
-
-    var s = 2;
-    object.scale.x = s;
-    object.scale.y = s;
-    object.scale.z = s;
-    object.rotation.y = Math.PI * 0.34;
-    var lp = this.lilypads[0];
-    lp.position.y = 1.1;
-
-    for (var o of this.lilypads) this.scene.add(o);
+  function animateLily(lily) {
+    console.log("playing animation");
+    lily.bloom();
   }
 
   function render(t) {
@@ -31,10 +21,12 @@ function MenuBackground() {
 	  var delta = this.clock.getDelta();
 
     var y = Math.sin(this.clock.getElapsedTime() * 0.5 * Math.PI) * 0.04 + 1.05;
-    for (var lp of this.lilypads)
-      lp.position.y = y;
+    this.lilypad.position.y = y;
   	this.renderer.render( this.scene, this.camera );
 
+    if (this.lilypad.mixer) {
+      this.lilypad.mixer.update(delta);
+    }
   }
 
   function init() {
@@ -75,14 +67,21 @@ function MenuBackground() {
 		ground.rotation.x = Math.PI * - 0.5;
 		scene.add( ground );
 
-    this.lilypads = [];
+    this.lilypad = new Lilypad();
+    var s = 2;
+    this.lilypad.scale.x = s;
+    this.lilypad.scale.y = s;
+    this.lilypad.scale.z = s;
+    this.lilypad.rotation.y = Math.PI * 0.33;
+    this.lilypad.position.y = 1.1;
+    scene.add( this.lilypad );
 
-    Lilypad(addLilies.bind(this));
+    this.lilypad.ready(animateLily);
 
-    var ambientLight = new THREE.AmbientLight( 0xcccccc, 0.4 );
+    var ambientLight = new THREE.AmbientLight( 0xffffff );
     scene.add( ambientLight );
 
-  	var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.6 );
+  	var directionalLight = new THREE.DirectionalLight( 0xffffff );
 	  directionalLight.position.set(...cameraPos);
     directionalLight.lookAt(...cameraDir);
 	  scene.add( directionalLight );
