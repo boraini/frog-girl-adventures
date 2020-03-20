@@ -7,9 +7,15 @@ var bg = new MenuBackground();
 var bgelem;
 var dispbox = document.getElementById("display");
 console.log(dispbox);
+function enterMainMenu() {
+  document.getElementById("menu-buttons").className = "enabled";
+  document.getElementById("menu-main-logo").className = "enabled";
+  console.log("menu open");
+}
 function menusetup() {
   console.log("started loop");
   bg.init();
+  bg.lilypad.ready(() => setTimeout(enterMainMenu, 2500));
   bgelem = bg.renderer.domElement;
   dispbox.appendChild(bgelem);
   bgelem.className = "background";
