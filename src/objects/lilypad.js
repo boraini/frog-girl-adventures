@@ -26,28 +26,14 @@ function Lilypad() {
   var scope = this;
 
   function loaded(imported) {
-    console.log(imported);
+    //console.log(imported);
     var animations = imported.animations;
 
     var scene = imported.scene;
     scope.lilypad = scene.getObjectByName("Lilypad");
     scope.flower = scene.getObjectByName("Flower");
 
-    console.log(scope.flower);
-
-    //scope.lilypad.material = Materials.Lilypad;
-
-
-    /*scope.flower.getObjectByName("Petal1").material = Materials.LilyPetal;
-    scope.flower.getObjectByName("Petal2").material = Materials.LilyPetal;
-    scope.flower.getObjectByName("Petal3").material = Materials.LilyPetal;
-    scope.flower.getObjectByName("Petal4").material = Materials.LilyPetal;
-    scope.flower.getObjectByName("Petal5").material = Materials.LilyPetal;
-    scope.flower.getObjectByName("Petal6").material = Materials.LilyPetal;*/
-
-    console.log("assigned materials");
     scope.add(scope.lilypad);
-    //scope.add(scene.getObjectByName("Petal1"))
 
     scope.mixer = new THREE.AnimationMixer(scope.flower);
 
@@ -59,8 +45,6 @@ function Lilypad() {
     scope.growAction.clampWhenFinished = true;
     scope.growAction.loop = THREE.LoopOnce;
 
-    console.log(scope);
-
     for (var fn of scope._readyCallbacks) fn(scope);
   }
   if (assets.lilypad) {
@@ -71,10 +55,7 @@ function Lilypad() {
     var loader = new GLTFLoader();
     loader.load("./assets/models/lilypad-animated.glb", loaded, null, console.error);
   }
-  console.log(assets.lilypad);
 }
-
-console.log(Materials);
 
 Lilypad.prototype = Object.create(Group.prototype);
 

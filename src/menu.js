@@ -1,21 +1,21 @@
 var assets = {};
 
 import { MenuBackground } from "./logic/menubg.js";
-import { goToPage } from "./logic/menufg.js";
+import { enterMainMenu, goToPage } from "./logic/menufg.js";
 
 var bg = new MenuBackground();
 var bgelem;
 var dispbox = document.getElementById("display");
+var animationSuccessful;
 console.log(dispbox);
-function enterMainMenu() {
-  document.getElementById("menu-buttons").className = "enabled";
-  document.getElementById("menu-main-logo").className = "enabled";
-  console.log("menu open");
-}
+
 function menusetup() {
   console.log("started loop");
   bg.init();
-  bg.lilypad.ready(() => setTimeout(enterMainMenu, 2500));
+  //Run startup sequence normally
+  bg.lilypad.ready(function() {animationSuccessful = true; setTimeout(enterMainMenu, 2500)});
+  //Run if lilypad model refuses to load.
+  setTimeout(function() {if (!animationSuccessful) enterMainMenu();}, 1000);
   bgelem = bg.renderer.domElement;
   dispbox.appendChild(bgelem);
   bgelem.className = "background";

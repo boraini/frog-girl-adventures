@@ -15,4 +15,10 @@ function goToPage(name) {
   }
 }
 
-export { goToPage };
+function enterMainMenu() {
+  document.getElementById("menu-buttons").className = "enabled";
+  document.getElementById("menu-main-logo").className = "enabled";
+  console.log("menu open");
+}
+
+export { goToPage, enterMainMenu };
