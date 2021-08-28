@@ -26,12 +26,13 @@ function Lilypad() {
   var scope = this;
 
   function loaded(imported) {
+    assets.lilypad = imported;
     //console.log(imported);
     var animations = imported.animations;
 
     var scene = imported.scene;
-    scope.lilypad = scene.getObjectByName("Lilypad");
-    scope.flower = scene.getObjectByName("Flower");
+    scope.lilypad = scene.getObjectByName("Lilypad").clone();
+    scope.flower = scene.getObjectByName("Flower").clone();
 
     scope.add(scope.lilypad);
 
@@ -48,10 +49,9 @@ function Lilypad() {
     for (var fn of scope._readyCallbacks) fn(scope);
   }
   if (assets.lilypad) {
-    return assets.lilypad;
+    loaded(assets.lilypad);
   }
   else {
-    assets.lilypad = this;
     var loader = new GLTFLoader();
     loader.load("./assets/models/lilypad-animated.glb", loaded, null, console.error);
   }

@@ -1,17 +1,35 @@
-var assets = {};
-
 import { MenuBackground } from "./logic/menubg.js";
-import { enterMainMenu, goToPage } from "./logic/menufg.js";
+import { enterMainMenu, goToPage, } from "./logic/menufg.js";
+import { LevelSelector } from "./logic/levelselector.js";
 
 var bg = new MenuBackground();
+window.bg = bg;
 var bgelem;
 var dispbox = document.getElementById("display");
+var levels = new LevelSelector(document.getElementById("levels"), bg);
 var animationSuccessful;
 console.log(dispbox);
+
+var NUMBEROFLEVELS = 5;
+
+function populateLevelOptions() {
+  var levelButtonContainer = document.getElementById("levels");
+  for (let n = 1; n <= NUMBEROFLEVELS; n++) {
+    var el = document.createElement("a");
+    el.className = "level-button";
+    el.href = "/level.html#" + n;
+    el.innerHTML = n;
+    
+    const x = Math.random() * 150 + 'px'; const y = Math.random() * 100; const z = 100 - y; if (el.style) [el.style.marginRight, el.style.marginLeft, el.style.marginTop, el.style.marginBottom] = [x, x, y + 'px', z + 'px'];
+    
+    levelButtonContainer.appendChild(el);
+  }
+}
 
 function menusetup() {
   console.log("started loop");
   bg.init();
+  bg.levelSelector = levels;
   //Run startup sequence normally
   bg.lilypad.ready(function() {animationSuccessful = true; setTimeout(enterMainMenu, 2500)});
   //Run if lilypad model refuses to load.
@@ -19,6 +37,7 @@ function menusetup() {
   bgelem = bg.renderer.domElement;
   dispbox.appendChild(bgelem);
   bgelem.className = "background";
+  populateLevelOptions();
   windowResizeHandler();
   requestAnimationFrame(menuloop);
 }

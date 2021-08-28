@@ -10,7 +10,10 @@ function MenuBackground() {
     flowX: 1,
     flowY: 1
   };
-
+  
+  var cameraPos = [0, 12, 11];
+  var cameraDir = [0, 0, -1];
+  
   function animateLily(lily) {
     console.log("playing animation");
     lily.bloom();
@@ -18,7 +21,7 @@ function MenuBackground() {
 
   function render(t) {
 
-	  var delta = this.clock.getDelta();
+	var delta = this.clock.getDelta();
 
     var y = Math.sin(this.clock.getElapsedTime() * 0.5 * Math.PI) * 0.04 + 1.05;
     this.lilypad.position.y = y;
@@ -37,13 +40,17 @@ function MenuBackground() {
     this.scene = scene;
 
     //Camera
-    var cameraPos = [0, 12, 11];
-    var cameraDir = [0, 0, -1];
+    
     var camera = new THREE.PerspectiveCamera(20, 1.33, 0.1, 1000);
     camera.position.set(...cameraPos);
     camera.lookAt(...cameraDir);
     this.camera = camera;
-
+    
+    //Raycaster
+    
+    this.raycaster = new THREE.Raycaster();
+    this.raycasting2DCoords = new THREE.Vector2();
+    
     //Water Surface
 
     var waterGeometry = new THREE.PlaneBufferGeometry(20, 20);
@@ -57,15 +64,17 @@ function MenuBackground() {
     water.position.y = 1;
   	water.rotation.x = Math.PI * - 0.5;
    	scene.add( water );
+    
+    this.water = water;
 
     //Rocky Ground
 
-    var groundGeometry = new THREE.PlaneBufferGeometry( 20, 20 );
+    /*var groundGeometry = new THREE.PlaneBufferGeometry( 20, 20 );
 		var groundMaterial = new THREE.MeshStandardMaterial( { roughness: 0.8, metalness: 0.4, color: 0x0088ff} );
 		var ground = new THREE.Mesh( groundGeometry, groundMaterial );
     this.ground = ground;
 		ground.rotation.x = Math.PI * - 0.5;
-		scene.add( ground );
+		scene.add( ground );*/
 
     this.lilypad = new Lilypad();
     var s = 2;
@@ -90,7 +99,9 @@ function MenuBackground() {
 
     this.renderer = new THREE.WebGLRenderer( { antialias: true } );
     var renderer = this.renderer;
-
+    
+    this.calculateScrollFactor();
+    this.initialized = true;
   }
   function resizeHandler(w, h, r) {
 
@@ -99,15 +110,42 @@ function MenuBackground() {
 
     this.renderer.setSize( w, h );
     this.renderer.setPixelRatio( r );
+    
+    if (this.initialized) this.calculateScrollFactor();
+    
+    
+
 
     /*this.renderer.domElement.style.width = null;
     this.renderer.domElement.style.height = null;*/
 
   }
+  
+  function calculateScrollFactor() {
+    this.raycasting2DCoords.y = 1;
+    this.raycaster.setFromCamera(this.raycasting2DCoords, this.camera);
+    var a = this.raycaster.intersectObject(this.water);
+    //console.log(a);
+    if (a.length > 0) a = a[0].point.z; else return;
+    
+    this.raycasting2DCoords.y = -1;
+    this.raycaster.setFromCamera(this.raycasting2DCoords, this.camera);
+    var b = this.raycaster.intersectObject(this.water);
+    if (b.length > 0) b = b[0].point.z; else return;
+    
+    this.scrollFactor = b - a;
+  }
+  
+  function setScroll(val) {
+    var delta = this.scrollFactor * val / this.renderer.domElement.getBoundingClientRect().height;
+    this.camera.position.set(cameraPos[0], cameraPos[1], cameraPos[2] + delta);
+    this.water.position.z = delta;
+  }
 
   this.init = init;
   this.render = render;
   this.resizeHandler = resizeHandler;
+  this.calculateScrollFactor = calculateScrollFactor;
 }
 
 export { MenuBackground };

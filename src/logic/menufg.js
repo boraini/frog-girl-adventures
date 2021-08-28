@@ -4,7 +4,11 @@ function goToPage(name) {
   var ne = menuholder.querySelector("#" + name);
   if (ne.classList) {
     if (ol) ol.classList.remove("menu-page-shown");
-    ne.classList.add("menu-page-shown")
+    ne.classList.add("menu-page-shown");
+    menuholder.scroll({
+      top: ne.offsetTop,
+      behavior: 'smooth' // smooth scroll
+    });
   }
   else {
     if (ol) {
@@ -20,5 +24,11 @@ function enterMainMenu() {
   document.getElementById("menu-main-logo").className = "enabled";
   console.log("menu open");
 }
+
+function onStoryModeButtonClick() {
+  goToPage("levels");
+}
+
+window.onStoryModeButtonClick = onStoryModeButtonClick;
 
 export { goToPage, enterMainMenu };

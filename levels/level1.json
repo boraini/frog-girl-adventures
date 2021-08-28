@@ -1,0 +1,42 @@
+{
+  "version": 0,
+  "start": [0, 0],
+  "finish": [4, 4],
+  "ground": [
+    [1, 1, 1, 1, 1],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [1, 1, 1, 1, 1]
+  ],
+  "lilypads": [
+    [1, 2],
+    [2, 2],
+    [3, 2],
+    [2, 0],
+    [2, 1]
+  ],
+  "lilypadPaths": [
+    [[0, 2], 0, 1],
+    [1, 2, [4, 2]],
+    [3, 4, 1]
+  ],
+  "obstacles": [
+    {
+      "type": "boulder",
+      "id": 0,
+      "location": [4, 5],
+      "layer": 1,
+      "rollDirection": 0,
+      "rollEndLayer": 0,
+      "blocks": "ground"
+    }
+  ],
+  "triggers": [
+    {
+      "type": "pressureLily",
+      "which": 3,
+      "triggers": 0
+    }
+  ]
+}
