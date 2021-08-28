@@ -17,7 +17,7 @@ function populateLevelOptions() {
   for (let n = 1; n <= NUMBEROFLEVELS; n++) {
     var el = document.createElement("a");
     el.className = "level-button";
-    el.href = "/level.html#" + n;
+    el.href = "level.html#" + n;
     el.innerHTML = n;
     
     const x = Math.random() * 150 + 'px'; const y = Math.random() * 100; const z = 100 - y; if (el.style) [el.style.marginRight, el.style.marginLeft, el.style.marginTop, el.style.marginBottom] = [x, x, y + 'px', z + 'px'];

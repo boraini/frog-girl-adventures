@@ -41,11 +41,11 @@ function World(levelInfo) {
   var ambientLight = new THREE.AmbientLight( 0xffffff, 1 );
   this.scene.add( ambientLight );
   
-  const cd = 5;
+  const cd = 4;
   this.camera.position.set(
-    tileSize * levelInfo.ground.length,
-    tileSize * levelInfo.ground.length,
-    tileSize * levelInfo.ground[0].length
+    cd * tileSize * levelInfo.ground.length,
+    cd * tileSize * levelInfo.ground.length,
+    cd * tileSize * levelInfo.ground[0].length
   );
   
   this.camera.lookAt(...this.levelCenter);
