@@ -23,7 +23,7 @@ class FrogGirl extends Group {
 		}
 		else {
 			const loader = new GLTFLoader();
-			loader.load("../../assets/models/frog-girl.gltf", loaded, null, console.error);
+			loader.load("./assets/models/frog-girl.gltf", loaded, null, console.error);
 		}
 		
 		this.locomoting = false;
