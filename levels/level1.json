@@ -2,6 +2,7 @@
   "version": 0,
   "start": [0, 0],
   "finish": [4, 4],
+	"numberOfTransforms": [1, 2, 3],
   "ground": [
     [1, 1, 1, 1, 1],
     [0, 0, 0, 0, 0],
@@ -25,17 +26,16 @@
     {
       "type": "boulder",
       "id": 0,
-      "location": [4, 5],
+      "location": [3, 1, 4],
       "layer": 1,
-      "rollDirection": 0,
-      "rollEndLayer": 0,
+      "rollTo": [1, 1, 4],
       "blocks": "ground"
     }
   ],
   "triggers": [
     {
-      "type": "pressureLily",
-      "which": 3,
+      "type": "key",
+      "location": [0, 1, 4],
       "triggers": 0
     }
   ]

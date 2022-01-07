@@ -1,9 +1,12 @@
-import {RockTile} from "../objects/rock-tile.js";
+import {RockTile, Boulder} from "../objects/rock.js";
 import {Lilypad} from "../objects/lilypad.js";
-import {Water} from '../modules/Water2.js';
+import {FrogGirl} from "../objects/frog-girl.js";
 import {Ground} from "../objects/ground.js";
 import {OrbitControls} from "../modules/OrbitControls.js";
-const tileSize = 1.6;
+import {levelParameters} from "./globals.js";
+import {BoundObject} from "./level-logic.js";
+
+const {tileSize, groundHeight, lilypadHeight} = levelParameters;
 
 function World(levelInfo) {
   this.scene = new THREE.Scene();
@@ -22,10 +25,10 @@ function World(levelInfo) {
   this.generateGround(levelInfo.ground);
   this.generateLilypads(levelInfo.lilypads);
   
-  this.groundPlane = new Ground();
+  this.groundPlane = new Ground(levelInfo, tileSize);
   this.scene.add(this.groundPlane);
   
-  const waterGeometry = new THREE.PlaneBufferGeometry(20, 20);
+  /*const waterGeometry = new THREE.PlaneBufferGeometry(20, 20);
   this.water = new Water( waterGeometry, {
   		color: 0x00ffcc,
 	  	scale: tileSize * 0.1 * levelInfo.ground.length,
@@ -36,7 +39,12 @@ function World(levelInfo) {
   this.water.position.set(this.levelCenter[0], -0.1, this.levelCenter[2]);
   this.water.rotation.x = Math.PI * - 0.5;
   this.water.scale.set(0.5, 0.5, 0.5);
-  this.scene.add(this.water);
+  this.scene.add(this.water);*/
+  
+  this.frogGirl = new FrogGirl();
+  this.frogGirl.position.set(tileSize * levelInfo.start[0], tileSize * groundHeight, tileSize * levelInfo.start[1]);
+  this.frogGirl.scale.set(0.3, 0.3, 0.3);
+  this.scene.add(this.frogGirl);
     
   var ambientLight = new THREE.AmbientLight( 0xffffff, 1 );
   this.scene.add( ambientLight );
@@ -65,6 +73,9 @@ function World(levelInfo) {
   
   this.controls = new OrbitControls( this.camera, this.renderer.domElement );
   this.controls.target.set(...this.levelCenter);
+	
+	this.raycaster = new THREE.Raycaster();
+	
   const b = () => {
     this.lilypads[0].bloom();
   }
@@ -90,6 +101,7 @@ function generateGround(tiles) {
     }
   }
   const zero = new THREE.Matrix4();
+	zero.multiplyScalar(0);
   while (counter < 32) {
     rockTile.setMatrixAt(counter, zero);
     counter++;
@@ -110,10 +122,37 @@ function generateLilypads(positions) {
     );
     lilypad.scale.set(0.6, 0.6, 0.6);
     lilypad.rotateY(6 * Math.random());
+		lilypad.groundHeight = levelParameters.lilypadHeight;
     
     this.scene.add(lilypad);
     this.lilypads.push(lilypad);
   }
+}
+
+function generateObstacles(obstacleInfos) {
+	this.obstacles = [];
+	for (let obstacleInfo of obstacleInfos) {
+		switch (obstacleInfo.type) {
+			case "boulder":
+			  this.obstacles.push(new Boulder(obstacleInfo));
+			break;
+			default:
+			  console.warn(obstacleInfo.type + "is an invalid obstacle type");
+		}
+	}
+}
+
+function generateTriggers(triggerInfos) {
+	this.triggers = [];
+	for (let triggerInfo of triggerInfos) {
+		switch (triggerInfo.type) {
+			case "key":
+			  this.triggers.push(new Key(triggerInfo));
+			break;
+			default:
+			  console.warn(triggerInfo.type + "is an invalid trigger type");
+		}
+	}
 }
 
 function render(t) {
@@ -125,9 +164,32 @@ function render(t) {
     this.groundPlane.mixer2.update(delta);
   }
   
+  this.frogGirl.updateAnimation(delta);
+  
   this.renderer.render( this.scene, this.camera );
 }
 
+function reset() {}
+
+function raycast(x, y) {
+	this.raycaster.setFromCamera(new THREE.Vector2(x, y), this.camera);
+	
+	const groundIntersection = this.raycaster.intersectObject(this.ground);
+	
+	if (groundIntersection.length > 0) {
+		//const color = new THREE.Color();
+		//this.ground.getColorAt(groundIntersection[0].instanceId, color);
+		//this.ground.setColorAt(groundIntersection[0].instanceId, color.setHex(0xff0000));
+		//this.ground.instanceColor.needsUpdate = true;
+		return {type: "ground", index: groundIntersection[0].instanceId};
+	}
+	
+	for (let i = 0; i < this.lilypads.length; i++) {
+		const intersection = this.raycaster.intersectObject(this.lilypads[i].lilypad);
+		
+		if (intersection) return {type: "lilypad", object: this.lilypads[i]};
+	}
+}
 function resizeHandler(w, h, r) {
   this.camera.aspect = w / h;
   this.camera.updateProjectionMatrix();
@@ -139,7 +201,10 @@ function resizeHandler(w, h, r) {
 
 World.prototype.generateGround = generateGround;
 World.prototype.generateLilypads = generateLilypads;
+World.prototype.generateObstacles = generateObstacles;
 World.prototype.render = render;
 World.prototype.resizeHandler = resizeHandler;
+World.prototype.reset = reset;
+World.prototype.raycast = raycast;
 
 export {World};
