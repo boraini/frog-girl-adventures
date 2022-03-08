@@ -7,14 +7,14 @@ class UIManager {
 	}
 	
 	handleCanvasClick(e) {
-		const bcr = world.renderer.domElement.getBoundingClientRect();
+		const bcr = this.world.renderer.domElement.getBoundingClientRect();
 		const node = this.level.raycast(
-		  (e.clientX - bcr.left) / bcr.width * 2 - 1,
+			(e.clientX - bcr.left) / bcr.width * 2 - 1,
 			1 - (e.clientY - bcr.top) / bcr.height * 2
 		);
 		if (node) {
 			console.log(node);
-			level.move(node);
+			this.level.move(node);
 		}
 	}
 }
