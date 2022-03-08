@@ -1,7 +1,7 @@
 import {assets} from "../logic/globals.js";
 
 const rockGeometry = (
-  function() {
+	function() {
 		const t = ( 1 + Math.sqrt( 5 ) ) / 2;
 
 		const vertices = [
@@ -19,15 +19,15 @@ const rockGeometry = (
 		
 		const sigma = 0.1;
 		const scale = 0.6;
-			for (let i = 0; i < vertices.length; i++) {
+		for (let i = 0; i < vertices.length; i++) {
 			vertices[i] *= scale;
-				vertices[i] += 2 * sigma * Math.random() - sigma;
-			}
+			vertices[i] += 2 * sigma * Math.random() - sigma;
+		}
 		
 		const geometry = new THREE.BufferGeometry();
 		geometry.setIndex(indices)
-						.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3))
-						.setAttribute( 'normal', new THREE.Float32BufferAttribute( vertices.slice(), 3 ) );
+			.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3))
+			.setAttribute("normal", new THREE.Float32BufferAttribute( vertices.slice(), 3 ) );
 						
 		return geometry;
 	}
@@ -36,15 +36,19 @@ const rockGeometry = (
 const rockTileMaterial = new THREE.MeshStandardMaterial({color: 0x888888});
 const boulderMaterial = new THREE.MeshStandardMaterial({color: 0x666666});
 
-function RockTile(u, r, d, l) {
-  if (!assets.RockTile) {
-    assets.RockTile = new THREE.InstancedMesh(rockGeometry, rockTileMaterial, 32);
-  }
-  return assets.RockTile;
+class RockTile {
+	constructor() {
+		if (!assets.RockTile) {
+			assets.RockTile = new THREE.InstancedMesh(rockGeometry, rockTileMaterial, 32);
+		}
+		return assets.RockTile;
+	}
 }
 
-function Boulder() {
-  return THREE.Mesh(rockGeometry, rockTileMaterial);
+class Boulder extends THREE.Mesh {
+	constructor() {
+		super(rockGeometry, boulderMaterial);
+	}
 }
 
 export {RockTile, Boulder};

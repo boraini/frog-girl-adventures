@@ -2,13 +2,12 @@ import { GLTFLoader } from "../modules/GLTFLoader.js";
 import { pathAnimation } from "../modules/animation-helper.js";
 import { assets } from "../logic/globals.js";
 const {
-  MeshStandardMaterial,
-  Group,
-  AnimationMixer
+	Group,
+	AnimationMixer
 } = THREE;
 
 class FrogGirl extends Group {
-    constructor() {
+	constructor() {
 		super();
 		
 		const scope = this;
@@ -35,7 +34,7 @@ class FrogGirl extends Group {
 		this.locomotionPath = null;
 		this.locomotionWaypointAvailable = false;
 		this.movesLocked = false;
-    }
+	}
 	
 	init(imported) {
 		const { animations, scene } = imported;
@@ -56,11 +55,11 @@ class FrogGirl extends Group {
 		
 		this.girlStandClip = this.rigMixer.clipAction(animations.find(s => s.name == "GirlRelaxed"));
 		this.girlStandClip.clampWhenFinished = true;
-        this.girlStandClip.loop = THREE.LoopRepeat;
+		this.girlStandClip.loop = THREE.LoopRepeat;
 		
 		this.girlThinkClip = this.rigMixer.clipAction(animations.find(s => s.name == "Think"));
 		this.girlThinkClip.clampWhenFinished = true;
-        this.girlThinkClip.loop = THREE.LoopOnce;
+		this.girlThinkClip.loop = THREE.LoopOnce;
 		
 		this.transformClip = this.rigMixer.clipAction(animations.find(s => s.name == "Transform"));
 		this.transformClip.clampWhenFinished = true;
@@ -75,13 +74,13 @@ class FrogGirl extends Group {
 		this.girlWalkClip.loop = THREE.LoopRepeat;
 		
 		this.girlBlinkClip = [
-		  this.girlEyelidLMixer.clipAction(animations.find(s => s.name == "Blink")),
-		  this.girlEyelidRMixer.clipAction(animations.find(s => s.name == "Blink"))
+			this.girlEyelidLMixer.clipAction(animations.find(s => s.name == "Blink")),
+			this.girlEyelidRMixer.clipAction(animations.find(s => s.name == "Blink"))
 		];
 		
 		this.girlBlinkClip.forEach((c) => {
-		  c.clampWhenFinished = true;
-          c.loop = THREE.LoopOnce;
+			c.clampWhenFinished = true;
+			c.loop = THREE.LoopOnce;
 		});
 		
 		this.rigMixer.addEventListener("finished", e => {
@@ -254,7 +253,7 @@ class FrogGirl extends Group {
 	locomote(path) {
 		if (!this.movesLocked) {
 			this.movesLocked = true;
-		  this.animateLocomotion(path);
+			this.animateLocomotion(path);
 			return true;
 		}
 		else return false;

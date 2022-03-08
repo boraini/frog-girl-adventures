@@ -32,7 +32,7 @@ class Pickable extends Group {
 class Blocker extends Pickable {
 	constructor() {
 		super();
-	  if (blocker) {
+		if (blocker) {
 			this.add(blocker.clone());
 		}
 		else {
@@ -44,7 +44,7 @@ class Blocker extends Pickable {
 class Key extends Pickable {
 	constructor() {
 		super();
-	  if (key) {
+		if (key) {
 			this.add(key.clone());
 		}
 		else {

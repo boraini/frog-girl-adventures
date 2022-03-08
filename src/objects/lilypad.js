@@ -1,32 +1,20 @@
-//import  {MeshStandardMaterial} from "../modules/three.module.js";
 import { GLTFLoader } from "../modules/GLTFLoader.js";
 import { assets } from "../logic/globals.js";
-import Materials from "./materials.js";
-const { MeshStandardMaterial, Group } = THREE;
-
-/*function Lilypad(callback) {
-  if (assets.lilypad) {
-    callback(assets.lilypad);
-  }
-  else {
-    var loader = new GLTFLoader();
-    loader.load("./assets/models/lilypad.glb", loaded.bind(null, callback), null, console.error);
-  }
-}*/
+const { Group } = THREE;
 
 class Lilypad extends Group {
 	constructor() {
 		super();
-		  this.type = 'Lilypad';
-		  this.animations = null;
-		  this.lilypad = null;
-		  this.flower = null;
-		  this.mixer = null;
-		  this.bloomAction = null;
-		  this._readyCallbacks = [];
-		  var scope = this;
+		this.type = "Lilypad";
+		this.animations = null;
+		this.lilypad = null;
+		this.flower = null;
+		this.mixer = null;
+		this.bloomAction = null;
+		this._readyCallbacks = [];
+		var scope = this;
 
-		  function loaded(imported) {
+		function loaded(imported) {
 			assets.lilypad = imported;
 			//console.log(imported);
 			var animations = imported.animations;
@@ -48,14 +36,14 @@ class Lilypad extends Group {
 			scope.growAction.loop = THREE.LoopOnce;
 
 			for (var fn of scope._readyCallbacks) fn(scope);
-		  }
-		  if (assets.lilypad) {
+		}
+		if (assets.lilypad) {
 			loaded(assets.lilypad);
-		  }
-		  else {
+		}
+		else {
 			var loader = new GLTFLoader();
 			loader.load("./assets/models/lilypad-animated.glb", loaded, null, console.error);
-		  }
+		}
 	}
 	
 	ready(callback) {
@@ -64,9 +52,9 @@ class Lilypad extends Group {
 	
 	bloom() {
 		this.add(this.flower);
-        this.bloomAction.reset().play();
-        this.growAction.reset().play();
+		this.bloomAction.reset().play();
+		this.growAction.reset().play();
 	}
 }
 
-export { Lilypad }
+export { Lilypad };
