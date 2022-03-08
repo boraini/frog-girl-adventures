@@ -1,0 +1,36 @@
+env:
+  browser: true
+  es6: true
+extends: 'eslint:recommended'
+globals:
+  Atomics: readonly
+  SharedArrayBuffer: readonly
+  THREE: false
+parserOptions:
+  ecmaVersion: 2018
+  sourceType: module
+ignorePatterns:
+  - "src/modules/three*.js"
+  - "src/modules/*Loader.js"
+rules:
+  indent:
+    - error
+    - tab
+  linebreak-style:
+    - error
+    - unix
+  quotes:
+    - error
+    - double
+  semi:
+    - error
+    - always
+  padding-line-between-statements:
+    - error
+    - 
+      blankLine: always
+      prev: 
+        - "*"
+      next:
+        - function
+        - class
