@@ -11,8 +11,8 @@ const {
 	Vector2,
 	Vector4
 } = THREE;
-import { Reflector } from './Reflector.js';
-import { Refractor } from './Refractor.js';
+import { Reflector } from "./Reflector.js";
+import { Refractor } from "./Refractor.js";
 
 /**
  * References:
@@ -27,7 +27,7 @@ class Water extends Mesh {
 
 		super( geometry );
 
-		this.type = 'Water';
+		this.type = "Water";
 
 		const scope = this;
 
@@ -44,8 +44,8 @@ class Water extends Mesh {
 		const textureLoader = new TextureLoader();
 
 		const flowMap = options.flowMap || undefined;
-		const normalMap0 = options.normalMap0 || textureLoader.load( 'assets/textures/water/Water_1_M_Normal.jpg' );
-		const normalMap1 = options.normalMap1 || textureLoader.load( 'assets/textures/water/Water_2_M_Normal.jpg' );
+		const normalMap0 = options.normalMap0 || textureLoader.load( "assets/textures/water/Water_1_M_Normal.jpg" );
+		const normalMap1 = options.normalMap1 || textureLoader.load( "assets/textures/water/Water_2_M_Normal.jpg" );
 
 		const cycle = 0.15; // a cycle of a flow map phase
 		const halfCycle = cycle * 0.5;
@@ -56,14 +56,14 @@ class Water extends Mesh {
 
 		if ( Reflector === undefined ) {
 
-			console.error( 'THREE.Water: Required component Reflector not found.' );
+			console.error( "THREE.Water: Required component Reflector not found." );
 			return;
 
 		}
 
 		if ( Refractor === undefined ) {
 
-			console.error( 'THREE.Water: Required component Refractor not found.' );
+			console.error( "THREE.Water: Required component Refractor not found." );
 			return;
 
 		}
@@ -87,7 +87,7 @@ class Water extends Mesh {
 
 		this.material = new ShaderMaterial( {
 			uniforms: UniformsUtils.merge( [
-				UniformsLib[ 'fog' ],
+				UniformsLib[ "fog" ],
 				shader.uniforms
 			] ),
 			vertexShader: shader.vertexShader,
@@ -98,16 +98,16 @@ class Water extends Mesh {
 
 		if ( flowMap !== undefined ) {
 
-			this.material.defines.USE_FLOWMAP = '';
-			this.material.uniforms[ 'tFlowMap' ] = {
-				type: 't',
+			this.material.defines.USE_FLOWMAP = "";
+			this.material.uniforms[ "tFlowMap" ] = {
+				type: "t",
 				value: flowMap
 			};
 
 		} else {
 
-			this.material.uniforms[ 'flowDirection' ] = {
-				type: 'v2',
+			this.material.uniforms[ "flowDirection" ] = {
+				type: "v2",
 				value: flowDirection
 			};
 
@@ -118,23 +118,23 @@ class Water extends Mesh {
 		normalMap0.wrapS = normalMap0.wrapT = RepeatWrapping;
 		normalMap1.wrapS = normalMap1.wrapT = RepeatWrapping;
 
-		this.material.uniforms[ 'tReflectionMap' ].value = reflector.getRenderTarget().texture;
-		this.material.uniforms[ 'tRefractionMap' ].value = refractor.getRenderTarget().texture;
-		this.material.uniforms[ 'tNormalMap0' ].value = normalMap0;
-		this.material.uniforms[ 'tNormalMap1' ].value = normalMap1;
+		this.material.uniforms[ "tReflectionMap" ].value = reflector.getRenderTarget().texture;
+		this.material.uniforms[ "tRefractionMap" ].value = refractor.getRenderTarget().texture;
+		this.material.uniforms[ "tNormalMap0" ].value = normalMap0;
+		this.material.uniforms[ "tNormalMap1" ].value = normalMap1;
 
 		// water
 
-		this.material.uniforms[ 'color' ].value = color;
-		this.material.uniforms[ 'reflectivity' ].value = reflectivity;
-		this.material.uniforms[ 'textureMatrix' ].value = textureMatrix;
+		this.material.uniforms[ "color" ].value = color;
+		this.material.uniforms[ "reflectivity" ].value = reflectivity;
+		this.material.uniforms[ "textureMatrix" ].value = textureMatrix;
 
 		// inital values
 
-		this.material.uniforms[ 'config' ].value.x = 0; // flowMapOffset0
-		this.material.uniforms[ 'config' ].value.y = halfCycle; // flowMapOffset1
-		this.material.uniforms[ 'config' ].value.z = halfCycle; // halfCycle
-		this.material.uniforms[ 'config' ].value.w = scale; // scale
+		this.material.uniforms[ "config" ].value.x = 0; // flowMapOffset0
+		this.material.uniforms[ "config" ].value.y = halfCycle; // flowMapOffset1
+		this.material.uniforms[ "config" ].value.z = halfCycle; // halfCycle
+		this.material.uniforms[ "config" ].value.w = scale; // scale
 
 		// functions
 
@@ -156,7 +156,7 @@ class Water extends Mesh {
 		function updateFlow() {
 
 			const delta = clock.getDelta();
-			const config = scope.material.uniforms[ 'config' ];
+			const config = scope.material.uniforms[ "config" ];
 
 			config.value.x += flowSpeed * delta; // flowMapOffset0
 			config.value.y = config.value.x + halfCycle; // flowMapOffset1
@@ -207,43 +207,43 @@ Water.WaterShader = {
 
 	uniforms: {
 
-		'color': {
-			type: 'c',
+		"color": {
+			type: "c",
 			value: null
 		},
 
-		'reflectivity': {
-			type: 'f',
+		"reflectivity": {
+			type: "f",
 			value: 0
 		},
 
-		'tReflectionMap': {
-			type: 't',
+		"tReflectionMap": {
+			type: "t",
 			value: null
 		},
 
-		'tRefractionMap': {
-			type: 't',
+		"tRefractionMap": {
+			type: "t",
 			value: null
 		},
 
-		'tNormalMap0': {
-			type: 't',
+		"tNormalMap0": {
+			type: "t",
 			value: null
 		},
 
-		'tNormalMap1': {
-			type: 't',
+		"tNormalMap1": {
+			type: "t",
 			value: null
 		},
 
-		'textureMatrix': {
-			type: 'm4',
+		"textureMatrix": {
+			type: "m4",
 			value: null
 		},
 
-		'config': {
-			type: 'v4',
+		"config": {
+			type: "v4",
 			value: new Vector4()
 		}
 

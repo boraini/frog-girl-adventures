@@ -21,7 +21,7 @@ class Refractor extends Mesh {
 
 		super( geometry );
 
-		this.type = 'Refractor';
+		this.type = "Refractor";
 
 		const scope = this;
 
@@ -67,9 +67,9 @@ class Refractor extends Mesh {
 			transparent: true // ensures, refractors are drawn from farthest to closest
 		} );
 
-		this.material.uniforms[ 'color' ].value = color;
-		this.material.uniforms[ 'tDiffuse' ].value = renderTarget.texture;
-		this.material.uniforms[ 'textureMatrix' ].value = textureMatrix;
+		this.material.uniforms[ "color" ].value = color;
+		this.material.uniforms[ "tDiffuse" ].value = renderTarget.texture;
+		this.material.uniforms[ "textureMatrix" ].value = textureMatrix;
 
 		// functions
 
@@ -279,15 +279,15 @@ Refractor.RefractorShader = {
 
 	uniforms: {
 
-		'color': {
+		"color": {
 			value: null
 		},
 
-		'tDiffuse': {
+		"tDiffuse": {
 			value: null
 		},
 
-		'textureMatrix': {
+		"textureMatrix": {
 			value: null
 		}
 
