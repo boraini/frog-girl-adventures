@@ -5,40 +5,40 @@ import {UIManager} from "./logic/level-ui.js";
 
 const levelNumber = parseInt(window.location.hash.substr(1));
 
-let canvas, dispbox, world, level, uiManager;
+let canvas, dispbox, world, level;
 
 function windowResizeHandler() {
-  var rect = dispbox.getBoundingClientRect() || {width: 800, height: 600};
-  var rt = window.devicePixelRatio || 2;
-  world.resizeHandler(rect.width, rect.height, rt);
+	var rect = dispbox.getBoundingClientRect() || {width: 800, height: 600};
+	var rt = window.devicePixelRatio || 2;
+	world.resizeHandler(rect.width, rect.height, rt);
 }
 
 function init(levelInfo) {
-  world = new World(levelInfo);
+	world = new World(levelInfo);
 	level = new Level(levelInfo, world);
-  window.world = world;
+	window.world = world;
 	window.level = level;
   
-  canvas = world.renderer.domElement;
-  dispbox = document.getElementById("dispbox");
-  dispbox.appendChild(canvas);
+	canvas = world.renderer.domElement;
+	dispbox = document.getElementById("dispbox");
+	dispbox.appendChild(canvas);
 	
-	uiManager = new UIManager(levelInfo, level, world);
+	new UIManager(levelInfo, level, world);
   
-  windowResizeHandler();
-  addEventListener("resize", windowResizeHandler);
+	windowResizeHandler();
+	addEventListener("resize", windowResizeHandler);
   
-  loop();
+	loop();
 }
 
 function loop() {
-  world.render();
-  requestAnimationFrame(loop);
+	world.render();
+	requestAnimationFrame(loop);
 }
 
 if (levelNumber) {
-  loadLevel(levelNumber, alert).then(init);
+	loadLevel(levelNumber, alert).then(init);
 }
 else {
-	alert()
+	alert();
 }
