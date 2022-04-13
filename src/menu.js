@@ -1,6 +1,7 @@
 import { MenuBackground } from "./logic/menubg.js";
 import { enterMainMenu, goToPage, } from "./logic/menufg.js";
 import { LevelSelector } from "./logic/levelselector.js";
+import { getStoryModeLevels } from "./logic/level-loader.js";
 
 var bg = new MenuBackground();
 var bgelem;
@@ -9,12 +10,13 @@ var levels = new LevelSelector(document.getElementById("levels"), bg);
 var animationSuccessful;
 var NUMBEROFLEVELS = 5;
 
-function populateLevelOptions() {
+function populateLevelOptions(list) {
+	NUMBEROFLEVELS = list.length;
 	var levelButtonContainer = document.getElementById("levels");
 	for (let n = 1; n <= NUMBEROFLEVELS; n++) {
 		var el = document.createElement("a");
 		el.className = "level-button";
-		el.href = "level.html#" + n;
+		el.href = "level.html#" + list[n - 1];
 		el.innerHTML = n;
     
 		const x = Math.random() * 150 + "px"; const y = Math.random() * 100; const z = 100 - y; if (el.style) [el.style.marginRight, el.style.marginLeft, el.style.marginTop, el.style.marginBottom] = [x, x, y + "px", z + "px"];
@@ -34,7 +36,7 @@ function menusetup() {
 	bgelem = bg.renderer.domElement;
 	dispbox.insertBefore(bgelem, dispbox.children[0]);
 	bgelem.className = "background";
-	populateLevelOptions();
+	getStoryModeLevels().then(populateLevelOptions);
 	windowResizeHandler();
 	requestAnimationFrame(menuloop);
 }
