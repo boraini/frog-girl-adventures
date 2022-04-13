@@ -1,5 +1,7 @@
 {
   "version": 0,
+  "title": "Test/Tutorial Level",
+  "description": "Click on rocks and lilypads to walk. Use the Transform button to transform between your human and frog forms.",
   "start": [0, 0],
   "finish": [4, 4],
 	"numberOfTransforms": [1, 2, 3],

@@ -34,8 +34,19 @@ body {
   font-size: 2em;
 }
 
+.bar.top {
+  top: 0;
+  padding-bottom: 0;
+}
+
 .bar.bottom {
   bottom: 0;
+  padding-top: 0;
+}
+
+.bar.left {
+  left: 0;
+  width: unset;
 }
 
 .bar-element {
@@ -47,7 +58,7 @@ body {
   display: inline-block;
   margin: 0;
   border: 0;
-  padding: 0.5em;
+  padding: 0.5em 1em;
   background-image: url(../assets/textures/gui/horizontal-button.svg);
   background-size: 100% 100%;
   background-color: transparent;
@@ -55,7 +66,11 @@ body {
   font: inherit;
 }
 
-.text-button:hover, .text-button:active {
+.text-button:disabled {
+  filter: brightness(80%);
+}
+
+.text-button:enabled:hover, .text-button:enabled:active {
   transform: scale(110%);
 }
 
@@ -75,8 +90,33 @@ body {
   background-image: url(../assets/textures/gui/icon/frog-girl-head.svg);
   background-color: transparent;
   vertical-align: middle;
+  transform: scale(1);
+  opacity: 0;
+  transition: opacity 0.4s, transform 0.4s;
 }
 
 #transform-opportunities li::before {
   content: "";
+}
+
+#transform-opportunities li.appear-growing {
+  transform: none;
+  opacity: 1;
+}
+
+#transform-opportunities li.disappear-shrinking {
+  transform: scale(0);
+  opacity: 0;
+}
+
+.level-title {
+  display: block;
+}
+
+.level-description {
+  background-color: rgba(255, 255, 255, 0.8);
+  color: black;
+  font-size: 1rem;
+  max-width: 30em;
+  padding: 1em;
 }
