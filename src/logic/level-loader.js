@@ -1,4 +1,9 @@
 function loadLevel(level) {
-	return fetch(`levels/level${level}.json`).then(r => r.json()).catch(console.log);
+	return fetch(level).then(r => r.json()).catch(console.log);
 }
-export {loadLevel};
+
+function getStoryModeLevels() {
+	return fetch("story-mode-levels.json").then(r => r.json()).catch(console.log);
+}
+
+export {getStoryModeLevels, loadLevel};
