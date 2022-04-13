@@ -8,6 +8,7 @@ import { levelParameters } from "./globals.js";
 const { tileSize, groundHeight, lilypadHeight } = levelParameters;
 
 function World(levelInfo) {
+	this.levelInfo = levelInfo;
 	this.scene = new THREE.Scene();
 	this.camera = new THREE.PerspectiveCamera(20, 1.33, 0.1, 1000);
 	this.renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -172,7 +173,14 @@ function render() {
 	this.renderer.render(this.scene, this.camera);
 }
 
-function reset() {}
+function reset() {
+	this.frogGirl.position.set(
+		tileSize * this.levelInfo.start[0],
+		tileSize * groundHeight,
+		tileSize * this.levelInfo.start[1]
+	);
+	this.frogGirl.transformToGirl();
+}
 
 function raycast(x, y) {
 	this.raycaster.setFromCamera(new THREE.Vector2(x, y), this.camera);

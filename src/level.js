@@ -23,7 +23,7 @@ function init(levelInfo) {
 	dispbox = document.getElementById("dispbox");
 	dispbox.appendChild(canvas);
 	
-	new UIManager(levelInfo, level, world);
+	window.uiManager = new UIManager(levelInfo, level, world);
   
 	windowResizeHandler();
 	addEventListener("resize", windowResizeHandler);
