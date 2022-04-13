@@ -132,7 +132,7 @@ class FrogGirl extends Group {
 	}
 	
 	animateLocomotion(path) {
-		const [clip, endQuat] = pathAnimation(path, this.quaternion, 5);
+		const [clip, endQuat] = pathAnimation(path, this.quaternion, 5 * this.scale.x / 0.3);
 		const action = this.mixer.clipAction(clip);
 		action.loop = THREE.LoopOnce;
 		

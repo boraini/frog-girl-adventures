@@ -200,7 +200,7 @@ class Level {
 	}
 	reset() {
 		this.position = this.start;
-
+		this.numberOfTransforms = 0;
 		this.world.reset();
 	}
 	raycast(x, y) {
@@ -216,6 +216,10 @@ class Level {
 				}
 			}
 		}
+	}
+	canTransform() {
+		console.log(this.position.boundObject);
+		return !(this.position.boundObject.type == "Lilypad" || this.world.frogGirl.heldItem);
 	}
 	transform() {
 		this.numberOfTransforms++;

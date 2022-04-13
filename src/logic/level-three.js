@@ -5,9 +5,9 @@ import { Ground } from "../objects/ground.js";
 import { OrbitControls } from "../modules/OrbitControls.js";
 import { levelParameters } from "./globals.js";
 
-const { tileSize, groundHeight, lilypadHeight } = levelParameters;
-
 function World(levelInfo) {
+	const { tileSize, groundHeight, lilypadHeight } = levelParameters;
+	this.levelInfo = levelInfo;
 	this.scene = new THREE.Scene();
 	this.camera = new THREE.PerspectiveCamera(20, 1.33, 0.1, 1000);
 	this.renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -21,8 +21,8 @@ function World(levelInfo) {
 		0.5 * tileSize * (levelInfo.ground[0].length - 1),
 	];
 
-	this.generateGround(levelInfo.ground);
-	this.generateLilypads(levelInfo.lilypads);
+	this.generateGround(levelInfo.ground, tileSize);
+	this.generateLilypads(levelInfo.lilypads, tileSize, lilypadHeight);
 
 	this.groundPlane = new Ground(levelInfo, tileSize);
 	this.scene.add(this.groundPlane);
@@ -46,7 +46,7 @@ function World(levelInfo) {
 		tileSize * groundHeight,
 		tileSize * levelInfo.start[1]
 	);
-	this.frogGirl.scale.set(0.3, 0.3, 0.3);
+	this.frogGirl.scale.set(0.3 / 1.6 * tileSize, 0.3 / 1.6 * tileSize, 0.3 / 1.6 * tileSize);
 	this.scene.add(this.frogGirl);
 
 	var ambientLight = new THREE.AmbientLight(0xffffff, 1);
@@ -78,14 +78,9 @@ function World(levelInfo) {
 	this.controls.target.set(...this.levelCenter);
 
 	this.raycaster = new THREE.Raycaster();
-
-	const b = () => {
-		this.lilypads[0].bloom();
-	};
-	this.lilypads[0].ready(b);
 }
 
-function generateGround(tiles) {
+function generateGround(tiles, tileSize) {
 	const rockTile = new RockTile(0, 0, 0, 0);
 	let counter = 0;
 	for (let i = 0; i < tiles.length; i++) {
@@ -96,6 +91,9 @@ function generateGround(tiles) {
 					new THREE.Matrix4()
 						.multiply(
 							new THREE.Matrix4().makeTranslation(tileSize * i, 0, tileSize * j)
+						)
+						.multiply(
+							new THREE.Matrix4().makeScale(tileSize / 1.6, tileSize / 1.6, tileSize / 1.6)
 						)
 						.multiply(
 							new THREE.Matrix4().makeRotationFromEuler(
@@ -119,7 +117,7 @@ function generateGround(tiles) {
 	this.ground = rockTile;
 }
 
-function generateLilypads(positions) {
+function generateLilypads(positions, tileSize, lilypadHeight) {
 	for (let position of positions) {
 		const lilypad = new Lilypad();
 		lilypad.position.set(tileSize * position[0], 0, tileSize * position[1]);
@@ -172,7 +170,15 @@ function render() {
 	this.renderer.render(this.scene, this.camera);
 }
 
-function reset() {}
+function reset() {
+	const {tileSize, groundHeight} = levelParameters;
+	this.frogGirl.position.set(
+		tileSize * this.levelInfo.start[0],
+		tileSize * groundHeight,
+		tileSize * this.levelInfo.start[1]
+	);
+	this.frogGirl.transformToGirl();
+}
 
 function raycast(x, y) {
 	this.raycaster.setFromCamera(new THREE.Vector2(x, y), this.camera);

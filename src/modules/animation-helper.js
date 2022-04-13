@@ -1,6 +1,7 @@
 const {
 	AnimationClip,
 	VectorKeyframeTrack,
+	QuaternionKeyframeTrack,
 	Quaternion,
 	Vector3
 } = THREE;
@@ -46,7 +47,7 @@ function pathAnimation(points, startQuat, speed = 5) {
 	quatTimes.push(total);
 	
 	const track = new VectorKeyframeTrack(".position", posTimes, posFlat);
-	const quatTrack = new VectorKeyframeTrack(".quaternion", quatTimes, quatFlat);
+	const quatTrack = new QuaternionKeyframeTrack(".quaternion", quatTimes, quatFlat);
 	const clip = new AnimationClip("pathAnimation" + Math.random(), total, [track, quatTrack]);
 	
 	return [clip, lastQuat];

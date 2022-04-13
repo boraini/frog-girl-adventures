@@ -2,8 +2,9 @@ import {loadLevel} from "./logic/level-loader.js";
 import {World} from "./logic/level-three.js";
 import {Level} from "./logic/level-logic.js";
 import {UIManager} from "./logic/level-ui.js";
+import {levelParameters} from "./logic/globals.js";
 
-const levelNumber = parseInt(window.location.hash.substr(1));
+const levelSource = window.location.hash.substring(1);
 
 let canvas, dispbox, world, level;
 
@@ -14,6 +15,7 @@ function windowResizeHandler() {
 }
 
 function init(levelInfo) {
+	levelParameters.tileSize = 8 / Math.max(levelInfo.ground.length, levelInfo.ground[0].length);
 	world = new World(levelInfo);
 	level = new Level(levelInfo, world);
 	window.world = world;
@@ -23,7 +25,7 @@ function init(levelInfo) {
 	dispbox = document.getElementById("dispbox");
 	dispbox.appendChild(canvas);
 	
-	new UIManager(levelInfo, level, world);
+	window.uiManager = new UIManager(levelInfo, level, world);
   
 	windowResizeHandler();
 	addEventListener("resize", windowResizeHandler);
@@ -36,9 +38,9 @@ function loop() {
 	requestAnimationFrame(loop);
 }
 
-if (levelNumber) {
-	loadLevel(levelNumber, alert).then(init);
+if (levelSource) {
+	loadLevel(levelSource, alert).then(init);
 }
 else {
-	alert();
+	alert("No level source was supplied in the URL after \"#\"!");
 }
