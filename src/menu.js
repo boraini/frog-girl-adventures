@@ -32,7 +32,7 @@ function menusetup() {
 	//Run if lilypad model refuses to load.
 	setTimeout(function() {if (!animationSuccessful) enterMainMenu();}, 1000);
 	bgelem = bg.renderer.domElement;
-	dispbox.appendChild(bgelem);
+	dispbox.insertBefore(bgelem, dispbox.children[0]);
 	bgelem.className = "background";
 	populateLevelOptions();
 	windowResizeHandler();
