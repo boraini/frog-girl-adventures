@@ -46,11 +46,13 @@ class Node {
 		const sID = searchID++;
 
 		const formAgnostic = typeof form == "undefined";
+		this._searchID = sID;
 		this._previous = null;
+		this._cost = 0;
 		const traversal = [this];
 
 		let found = false;
-		while (traversal.length > 0) {
+		while (!found && traversal.length > 0) {
 			traversal.sort(
 				(a, b) => a._cost + a.heuristic(goal) - (b._cost + b.heuristic(goal))
 			);

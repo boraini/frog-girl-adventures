@@ -192,7 +192,8 @@ function raycast(x, y) {
 			this.lilypads[i].lilypad
 		);
 
-		if (intersection) return { type: "lilypad", object: this.lilypads[i] };
+		if (intersection.length > 0)
+			return { type: "lilypad", object: this.lilypads[i] };
 	}
 }
 
