@@ -5,10 +5,75 @@ html, body {
   height: 100%;
   background-color: black;
 }
-.background {
+
+body {
+  position: relative;
+  font: 1rem "Helvetica Neue", Arial, sans-serif;
+}
+
+.background, .foreground {
+  position: absolute;
   display: block;
+  left: 0;
+  top: 0;
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
+}
+
+.bar {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  left: 0;
+  box-sizing: border-box;
+  padding: 1em;
+  width: 100%;
+  font-size: 2em;
+}
+
+.bar.bottom {
+  bottom: 0;
+}
+
+.bar-element {
+  margin: 0;
+  padding: 0;
+}
+
+.text-button {
+  display: inline-block;
+  margin: 0;
+  border: 0;
+  padding: 0.5em;
+  background-image: url(../assets/textures/gui/horizontal-button.svg);
+  background-size: 100% 100%;
+  background-color: transparent;
+  color: white;
+  font: inherit;
+}
+
+.text-button:hover, .text-button:active {
+  transform: scale(110%);
+}
+
+#transform-opportunities {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+}
+
+#transform-opportunities li {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  width: 1.5em;
+  height: 1.5em;
+  background-color: white;
+}
+
+#transform-opportunities li::before {
+  content: "";
 }
