@@ -46,12 +46,12 @@ class UIManager {
 		}
 	}
 
-	handleTransformClick(e) {
+	handleTransformClick() {
 		this.level.transform();
 		this.updateUI();
 	}
 
-	handleRetryClick(e) {
+	handleRetryClick() {
 		this.reset();
 		this.updateUI();
 	}
