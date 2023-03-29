@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="90mm"
+   height="90mm"
+   viewBox="0 0 90 90"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
+   sodipodi:docname="lilypad-button.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.71624579"
+     inkscape:cx="211.51957"
+     inkscape:cy="425.13339"
+     inkscape:window-width="1920"
+     inkscape:window-height="991"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-10.763699,-36.252503)">
+    <path
+       id="path234"
+       style="fill:#00ac00;fill-opacity:1;stroke:#008200;stroke-width:3.59201;stroke-opacity:1"
+       d="M 95.843922,81.252507 58.174485,81.87584 91.289746,99.826138 c -6.697478,12.784072 -20.093137,21.506582 -35.526047,21.506582 -22.135694,0 -40.080221,-17.94452 -40.080223,-40.080213 0,-22.135696 17.944527,-40.080223 40.080223,-40.080223 22.135696,0 40.080225,17.944527 40.080223,40.080223 z"
+       sodipodi:nodetypes="cccsssc" />
+  </g>
+</svg>

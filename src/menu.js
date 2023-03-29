@@ -19,7 +19,9 @@ function populateLevelOptions(list) {
 		el.href = "level.html#" + list[n - 1];
 		el.innerHTML = n;
     
-		const x = Math.random() * 150 + "px"; const y = Math.random() * 100; const z = 100 - y; if (el.style) [el.style.marginRight, el.style.marginLeft, el.style.marginTop, el.style.marginBottom] = [x, x, y + "px", z + "px"];
+		const x = Math.random() * 40 + "px";
+		const y = Math.random() * 40;
+		[el.style.marginRight, el.style.marginLeft, el.style.marginTop, el.style.marginBottom] = [x, x, y + "px", y + "px"];
     
 		levelButtonContainer.appendChild(el);
 	}
