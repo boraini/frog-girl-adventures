@@ -66,8 +66,9 @@ class FrogGirl extends Group {
 		this.transformClip.loop = THREE.LoopOnce;
 		
 		this.frogJumpClip = this.rigMixer.clipAction(animations.find(s => s.name == "FrogJump"));
+		this.frogJumpClip.duration = 5 * this.scale.x / 0.3;
 		this.frogJumpClip.clampWhenFinished = true;
-		this.frogJumpClip.loop = THREE.LoopOnce;
+		this.frogJumpClip.loop = THREE.LoopRepeat;
 		
 		this.girlWalkClip = this.rigMixer.clipAction(animations.find(s => s.name == "GirlWalk"));
 		this.girlWalkClip.clampWhenFinished = true;
@@ -203,9 +204,10 @@ class FrogGirl extends Group {
 	stopJumping() {
 		this.locomoting = false;
 		this.unlockTransformation();
-		this.frogJumpClip.reset().timeScale = -1;
+		this.frogJumpClip.reset().stop();
+		/*this.frogJumpClip.reset().timeScale = -1;
 		this.frogJumpClip.time = this.frogJumpClip.getClip().duration;
-		this.frogJumpClip.play();
+		this.frogJumpClip.play();*/
 	}
 	
 	startWalking() {
