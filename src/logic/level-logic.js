@@ -34,8 +34,8 @@ class Node {
 		}
 	}
 
-	isOccupied() {
-		return !!this.item;
+	isOccupied(form) {
+		return this.item && this.item.walkOverBy.indexOf(form) == -1;
 	}
 
 	heuristic(other) {
@@ -67,7 +67,7 @@ class Node {
 					neighbor._cost = neighborNewCost;
 					neighbor._previous = current;
 					if (
-						!neighbor.isOccupied() &&
+						!neighbor.isOccupied(form) &&
             (formAgnostic || neighbor.allowedForms.includes(form))
 					)
 						traversal.push(neighbor);
@@ -78,7 +78,7 @@ class Node {
 
 		if (found) {
 			let previous =
-        goal.isOccupied() ||
+        goal.isOccupied(form) ||
         (!formAgnostic && !goal.allowedForms.includes(form)) ? goal._previous: goal;
 			const result = [];
 			while (previous) {
@@ -232,7 +232,7 @@ class Level {
 			onStateReady();
 			return Promise.resolve();
 		}
-		if (node.isOccupied()) {
+		if (node.isOccupied(this.world.frogGirl.form)) {
 			const item = node.item;
 			if (!this.world.frogGirl.heldItem) {
 				this.findPath(node).then(

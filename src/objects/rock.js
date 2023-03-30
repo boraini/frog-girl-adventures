@@ -48,11 +48,13 @@ class RockTile {
 class Boulder extends THREE.Mesh {
 	static handleMatrix = new THREE.Matrix4();
 	static pickableBy = [];
+	static walkOverBy = [];
 	constructor() {
 		super(rockGeometry, boulderMaterial);
 		this.groundMatrix = Boulder.handleMatrix;
 		this.handMatrix = Boulder.handleMatrix;
 		this.pickableBy = Boulder.pickableBy;
+		this.walkOverBy = Boulder.walkOverBy;
 	}
 }
 

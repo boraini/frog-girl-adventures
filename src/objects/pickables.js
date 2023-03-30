@@ -34,10 +34,12 @@ class Pickable extends Group {
 class Blocker extends Pickable {
 	static groundMatrix = new THREE.Matrix4().makeScale(0.3 / 1.6, 0.3 / 1.6, 0.3 / 1.6);
 	static handMatrix = new THREE.Matrix4();
+	static walkOverBy = [];
 	constructor() {
 		super();
 		this.groundMatrix = Blocker.groundMatrix;
 		this.handMatrix = Blocker.handMatrix;
+		this.walkOverBy = Blocker.walkOverBy;
 		if (blocker) {
 			this.add(blocker.clone());
 		}
@@ -50,10 +52,12 @@ class Blocker extends Pickable {
 class Key extends Pickable {
 	static groundMatrix = new THREE.Matrix4().makeScale(0.3 / 1.6, 0.3 / 1.6, 0.3 / 1.6);
 	static handMatrix = new THREE.Matrix4();
+	static walkOverBy = ["frog", "girl"];
 	constructor() {
 		super();
 		this.groundMatrix = Key.groundMatrix;
 		this.handMatrix = Key.handMatrix;
+		this.walkOverBy = Key.walkOverBy;
 		if (key) {
 			this.add(key.clone());
 		}
