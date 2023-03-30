@@ -132,7 +132,7 @@ class FrogGirl extends Group {
 		}
 	}
 	
-	animateLocomotion(path) {
+	animateLocomotion(path, resolve, reject) {
 		const [clip, endQuat] = pathAnimation(path, this.quaternion, 5 * this.scale.x / 0.3);
 		const action = this.mixer.clipAction(clip);
 		action.loop = THREE.LoopOnce;
@@ -152,6 +152,7 @@ class FrogGirl extends Group {
 				if (this.mode == "girl") this.stopWalking();
 				
 				this.movesLocked = false;
+				if (resolve) resolve();
 			}
 		};
 		this.mixer.addEventListener("finished", listener);
@@ -259,6 +260,17 @@ class FrogGirl extends Group {
 			return true;
 		}
 		else return false;
+	}
+
+	async locomoteAsync(path) {
+		if (!this.movesLocked) {
+			if (path.length < 2) {
+				return Promise.resolve();
+			}
+			this.movesLocked = true;
+			return new Promise((resolve, reject) => this.animateLocomotion(path, resolve, reject));
+		}
+		else return Promise.reject("moves are locked");
 	}
 	
 	lockTransformation() {

@@ -40,9 +40,7 @@ class UIManager {
 			1 - (e.clientY - bcr.top) / bcr.height * 2
 		);
 		if (node) {
-			console.log(node);
-			this.level.move(node);
-			this.updateUI();
+			this.level.interactWithNode(node, () => this.updateUI());
 		}
 	}
 
@@ -64,14 +62,12 @@ class UIManager {
 	updateUI() {
 		const maxN = this.levelInfo.numberOfTransforms[this.levelInfo.numberOfTransforms.length - 1];
 		this.updateTransformOpportunities(maxN - this.level.numberOfTransforms);
-		console.log(this.level.canTransform());
 		this.transformButton.disabled = !this.level.canTransform();
 	}
 
 	updateTransformOpportunities(n) {
 		if (n < 0) n = 0;
 		let currentElements = this.transformOpportunitiesDisplay.querySelectorAll("li");
-		console.log(currentElements);
 		if (currentElements.length < n) {
 			const el = document.createElement("li");
 			this.transformOpportunitiesDisplay.insertBefore(el, currentElements[0]);

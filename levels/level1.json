@@ -24,18 +24,15 @@
     [1, 2, [4, 2]],
     [3, 4, 1]
   ],
-  "obstacles": [
+  "objects": [
     {
-      "type": "boulder",
       "id": 0,
-      "location": [3, 1, 4],
-      "layer": 1,
-      "rollTo": [1, 1, 4],
-      "blocks": "ground"
-    }
-  ],
-  "triggers": [
+      "type": "boulder",
+      "location": [4, 1, 4],
+      "rollTo": [1, 1, 4]
+    },
     {
+      "id": 1,
       "type": "key",
       "location": [0, 1, 4],
       "triggers": 0

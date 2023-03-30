@@ -5,7 +5,7 @@ const {
 } = THREE;
 
 const loader = new GLTFLoader();
-loader.load("./assets/models/ground.gltf", loaded, null, console.error);
+loader.load("./assets/models/pickables.gltf", loaded, null, console.error);
 let keyInstances = [];
 let blockerInstances = [];
 let key;
@@ -24,31 +24,41 @@ function loaded(imported) {
 }
 
 class Pickable extends Group {
+	static pickableBy = ["girl"];
 	constructor() {
 		super();
+		this.pickableBy = Pickable.pickableBy;
 	}
 }
 
 class Blocker extends Pickable {
+	static groundMatrix = new THREE.Matrix4().makeScale(0.3 / 1.6, 0.3 / 1.6, 0.3 / 1.6);
+	static handMatrix = new THREE.Matrix4();
 	constructor() {
 		super();
+		this.groundMatrix = Blocker.groundMatrix;
+		this.handMatrix = Blocker.handMatrix;
 		if (blocker) {
 			this.add(blocker.clone());
 		}
 		else {
-			blockerInstances.add(this);
+			blockerInstances.push(this);
 		}
 	}
 }
 
 class Key extends Pickable {
+	static groundMatrix = new THREE.Matrix4().makeScale(0.3 / 1.6, 0.3 / 1.6, 0.3 / 1.6);
+	static handMatrix = new THREE.Matrix4();
 	constructor() {
 		super();
+		this.groundMatrix = Key.groundMatrix;
+		this.handMatrix = Key.handMatrix;
 		if (key) {
 			this.add(key.clone());
 		}
 		else {
-			keyInstances.add(this);
+			keyInstances.push(this);
 		}
 	}
 }

@@ -46,8 +46,11 @@ class RockTile {
 }
 
 class Boulder extends THREE.Mesh {
+	static handleMatrix = new THREE.Matrix4();
 	constructor() {
 		super(rockGeometry, boulderMaterial);
+		this.groundMatrix = Boulder.handleMatrix;
+		this.handMatrix = Boulder.handleMatrix;
 	}
 }
 
