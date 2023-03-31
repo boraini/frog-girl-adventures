@@ -49,11 +49,6 @@
       "type": "key",
       "location": [4, 1, 4],
       "triggers": 0
-    },
-    {
-      "id": 4,
-      "type": "blocker",
-      "location": [4, 1, 3]
     }
   ]
 }
