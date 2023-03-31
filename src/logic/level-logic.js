@@ -110,6 +110,7 @@ class Level {
 		const groundNodes = [];
 		this.groundNodes = groundNodes;
 		this.groundNodesCompressed = [];
+		this.items = world.objects;
 
 		for (let i = 0; i < levelInfo.ground.length; i++) {
 			groundNodes.push(new Array(levelInfo.ground[i].length));
@@ -203,10 +204,8 @@ class Level {
 			}
 			
 			if (object.location instanceof Array) {
-				const object3D = new constructors[object.type]();
-				const node = groundNodes[object.location[0]][object.location[2]];
-				node.item = object3D;
-				world.drop(null, node, object3D);
+				const object3D = new constructors[object.type](object);
+				this.items[object.id] = object3D;
 			} else {
 				console.error(`Location for id ${object.id} should be specified as [x, don't-care, y] on a ground tile.`);
 			}
@@ -226,6 +225,19 @@ class Level {
 		this.position = this.start;
 		this.numberOfTransforms = 0;
 		this.world.reset();
+		for (let node of this.groundNodesCompressed) {
+			node.item = null;
+		}
+		for (let object3D of Object.values(this.items)) {
+			const object = object3D.config;
+			object.destroyed = false;
+			const node = this.groundNodes[object.location[0]][object.location[2]];
+			node.item = object3D;
+			if (object3D.stopAnimation) {
+				object3D.stopAnimation();
+			}
+			this.world.drop(this.world.frogGirl, node, object3D);
+		}
 	}
 	interactWithNode(node, onStateReady) {
 		if (this.world.frogGirl.movesLocked) {
@@ -242,8 +254,19 @@ class Level {
 						return this.move(path);
 					}
 				).then(
-					() => this.canPick(this.world.frogGirl, item) ? this.world.pick(this.world.frogGirl, node, item) : false
-				).catch(err => console.warn(err)).finally(onStateReady);
+					() => {
+						if (this.canPick(this.world.frogGirl, item)) {
+							this.world.pick(this.world.frogGirl, node, item);
+						}
+
+						if (item.config.triggers != undefined) {
+							console.log("executing trigger");
+							return this.executeTrigger(node, item);
+						} else {
+							return Promise.resolve();
+						}
+					}
+				).then(() => {}).catch(err => console.warn(err)).finally(onStateReady);
 			}
 		} else {
 			const item = this.world.frogGirl.heldItem;
@@ -315,17 +338,27 @@ class Level {
 	}
 	pick(node) {
 		const item = node.item;
-		this.world.frogGirl.heldItem = item;
 		node.item = null;
-		//this.world.pick(this.world.frogGirl, node, item);
-		this.world.frogGirl.lockTransformation();
+		if (item.destroyAfterPicking) {
+			return false;
+		} else {
+			this.world.frogGirl.heldItem = item;
+		    this.world.frogGirl.lockTransformation();
+			return true;
+		}
 	}
 	drop(node) {
 		const item = this.world.frogGirl.heldItem;
 		node.item = item;
 		this.world.frogGirl.heldItem = null;
-		//this.world.drop(this.world.frogGirl, node, item);
 		this.world.frogGirl.unlockTransformation();
+	}
+	executeTrigger(node, item) {
+		const otherObject = this.items[item.config.triggers];
+		if (!otherObject) {
+			return Promise.reject(`Other object with id ${item.config.triggers} not found.`);
+		}
+		return otherObject.trigger(this, node, item);
 	}
 }
 

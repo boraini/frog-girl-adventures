@@ -15,6 +15,7 @@ function World(levelInfo) {
 	this.renderer.setClearColor(0x00aaff);
 
 	this.lilypads = [];
+	this.objects = {};
 
 	this.levelCenter = [
 		0.5 * tileSize * (levelInfo.ground.length - 1),
@@ -171,6 +172,12 @@ function render() {
 
 	this.frogGirl.updateAnimation(delta);
 
+	Object.values(this.objects).forEach(obj => {
+		if (!obj.destroyed && obj.updateAnimation) {
+			obj.updateAnimation(delta);
+		}
+	});
+
 	this.renderer.render(this.scene, this.camera);
 }
 
@@ -208,14 +215,19 @@ function raycast(x, y) {
 }
 
 function pick(character, node, item) {
-	const par = character.getObjectByName("handR");
-	const mat = (new THREE.Matrix4()).makeRotationFromEuler(new THREE.Euler(
-		0.5 * Math.PI,
-		0,
-		0.5 * Math.PI, "XYZ"
-	)).multiply(item.handMatrix);
-	mat.decompose(item.position, item.quaternion, item.scale);
-	par.add(item);
+	if (item.destroyAfterPicking) {
+		item.parent.remove(item);
+		item.destroyed = true;
+	} else {
+		const par = character.getObjectByName("handR");
+		const mat = (new THREE.Matrix4()).makeRotationFromEuler(new THREE.Euler(
+			0.5 * Math.PI,
+			0,
+			0.5 * Math.PI, "XYZ"
+		)).multiply(item.handMatrix);
+		mat.decompose(item.position, item.quaternion, item.scale);
+		par.add(item);
+	}
 }
 
 function drop(character, node, item) {

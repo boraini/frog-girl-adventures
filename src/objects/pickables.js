@@ -25,8 +25,9 @@ function loaded(imported) {
 
 class Pickable extends Group {
 	static pickableBy = ["girl"];
-	constructor() {
+	constructor(config) {
 		super();
+		this.config = config;
 		this.pickableBy = Pickable.pickableBy;
 	}
 }
@@ -35,11 +36,13 @@ class Blocker extends Pickable {
 	static groundMatrix = new THREE.Matrix4().makeScale(0.3 / 1.6, 0.3 / 1.6, 0.3 / 1.6);
 	static handMatrix = new THREE.Matrix4();
 	static walkOverBy = [];
-	constructor() {
-		super();
+	static destroyAfterPicking = false;
+	constructor(config) {
+		super(config);
 		this.groundMatrix = Blocker.groundMatrix;
 		this.handMatrix = Blocker.handMatrix;
 		this.walkOverBy = Blocker.walkOverBy;
+		this.destroyAfterPicking = Blocker.destroyAfterPicking;
 		if (blocker) {
 			this.add(blocker.clone());
 		}
@@ -53,11 +56,13 @@ class Key extends Pickable {
 	static groundMatrix = new THREE.Matrix4().makeScale(0.3 / 1.6, 0.3 / 1.6, 0.3 / 1.6);
 	static handMatrix = new THREE.Matrix4();
 	static walkOverBy = ["frog", "girl"];
-	constructor() {
-		super();
+	static destroyAfterPicking = true;
+	constructor(config) {
+		super(config);
 		this.groundMatrix = Key.groundMatrix;
 		this.handMatrix = Key.handMatrix;
 		this.walkOverBy = Key.walkOverBy;
+		this.destroyAfterPicking = Key.destroyAfterPicking;
 		if (key) {
 			this.add(key.clone());
 		}

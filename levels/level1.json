@@ -28,8 +28,8 @@
     {
       "id": 0,
       "type": "boulder",
-      "location": [4, 1, 4],
-      "rollTo": [1, 1, 4]
+      "location": [4, 1, 3],
+      "rollTo": [4, 1, 1]
     },
     {
       "id": 1,
