@@ -46,7 +46,7 @@ function World(levelInfo) {
 	this.frogGirl.position.set(
 		tileSize * levelInfo.start[0],
 		tileSize * groundHeight,
-		tileSize * levelInfo.start[1]
+		tileSize * levelInfo.start[2]
 	);
 	this.characterScale = new THREE.Vector3(0.3 / 1.6 * tileSize, 0.3 / 1.6 * tileSize, 0.3 / 1.6 * tileSize);
 	this.frogGirl.scale.copy(this.characterScale);
