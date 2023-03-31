@@ -72,4 +72,26 @@ class Key extends Pickable {
 	}
 }
 
-export {Pickable, Blocker, Key};
+class Finish extends Pickable {
+	static handleMatrix = new THREE.Matrix4();
+	static pickableBy = ["frog", "girl"];
+	static walkOverBy = ["frog", "girl"];
+	static destroyAfterPicking = true;
+	constructor() {
+		super({id: "finish", triggers: "finish"});
+
+		const geometry = new THREE.BoxGeometry( 1, 0.05, 1 );
+		const material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+		const cube = new THREE.Mesh( geometry, material );
+		cube.quaternion.setFromEuler(new THREE.Euler(0, Math.PI / 4, 0, "XYZ"));
+		this.add(cube);
+
+		this.groundMatrix = Finish.handleMatrix;
+		this.handMatrix = Finish.handleMatrix;
+		this.pickableBy = Finish.pickableBy;
+		this.walkOverBy = Finish.walkOverBy;
+		this.destroyAfterPicking = Key.destroyAfterPicking;
+	}
+}
+
+export {Pickable, Blocker, Key, Finish};

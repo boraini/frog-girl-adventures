@@ -63,6 +63,11 @@ class UIManager {
 		const maxN = this.levelInfo.numberOfTransforms[this.levelInfo.numberOfTransforms.length - 1];
 		this.updateTransformOpportunities(maxN - this.level.numberOfTransforms);
 		this.transformButton.disabled = !this.level.canTransform();
+
+		if (this.level.finished) {
+			this.level.finished = false;
+			this.showFinishPopup();
+		}
 	}
 
 	updateTransformOpportunities(n) {
@@ -82,6 +87,13 @@ class UIManager {
 				setTimeout(() => this.transformOpportunitiesDisplay.removeChild(el), 1000);
 			}
 		}
+	}
+
+	showFinishPopup() {
+		console.log("game over");
+		const popup = document.getElementById("finish-popup");
+		popup.classList.add("shown");
+		requestAnimationFrame(t => popup.classList.add("shown2"));
 	}
 }
 

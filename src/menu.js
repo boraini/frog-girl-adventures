@@ -68,7 +68,11 @@ catch (e) {
 }
 
 function menumain() {
-	goToPage("main");
+	if (window.location.hash == "#levels") {
+		goToPage("levels");
+	} else {
+		goToPage("main");
+	}
 	menusetup();
 	menuloop();
 }

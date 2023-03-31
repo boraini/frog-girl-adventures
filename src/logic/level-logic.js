@@ -1,4 +1,4 @@
-import { Pickable, Blocker, Key } from "../objects/pickables.js";
+import { Pickable, Blocker, Key, Finish } from "../objects/pickables.js";
 import { Boulder } from "../objects/rock.js";
 import { levelParameters } from "./globals.js";
 
@@ -211,8 +211,10 @@ class Level {
 			}
 		}
 
-		this.start = groundNodes[levelInfo.start[0]][levelInfo.start[1]];
-		this.finish = groundNodes[levelInfo.finish[0]][levelInfo.finish[1]];
+		this.start = groundNodes[levelInfo.start[0]][levelInfo.start[2]];
+		this.finish = groundNodes[levelInfo.finish[0]][levelInfo.finish[2]];
+		const finish3D = new Finish();
+		world.drop(world.frogGirl, this.finish, finish3D);
 
 		this.world = world;
 
@@ -220,6 +222,7 @@ class Level {
 		this.numberOfTransformsLimits = levelInfo.numberOfTransforms;
 
 		this.reset();
+		this.finish.item = finish3D;
 	}
 	reset() {
 		this.position = this.start;
@@ -244,27 +247,25 @@ class Level {
 			onStateReady();
 			return Promise.resolve();
 		}
-		if (node.isOccupied(this.world.frogGirl.form)) {
+		if (node.item) {
+			console.log("node is occupied");
 			const item = node.item;
 			if (!this.world.frogGirl.heldItem) {
 				this.findPath(node).then(
 					path => {
 						if (this.canPick(this.world.frogGirl, item)) this.pick(node);
-						onStateReady();
 						return this.move(path);
 					}
 				).then(
 					() => {
 						if (this.canPick(this.world.frogGirl, item)) {
 							this.world.pick(this.world.frogGirl, node, item);
+							if (item.config.triggers != undefined) {
+								console.log("executing trigger");
+								return this.executeTrigger(node, item);
+							}
 						}
-
-						if (item.config.triggers != undefined) {
-							console.log("executing trigger");
-							return this.executeTrigger(node, item);
-						} else {
-							return Promise.resolve();
-						}
+						return Promise.resolve();
 					}
 				).then(() => {}).catch(err => console.warn(err)).finally(onStateReady);
 			}
@@ -354,6 +355,10 @@ class Level {
 		this.world.frogGirl.unlockTransformation();
 	}
 	executeTrigger(node, item) {
+		if (item.config.triggers == "finish") {
+			this.finished = true;
+			return Promise.resolve("finish");
+		}
 		const otherObject = this.items[item.config.triggers];
 		if (!otherObject) {
 			return Promise.reject(`Other object with id ${item.config.triggers} not found.`);

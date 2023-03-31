@@ -27,7 +27,6 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  left: 0;
   box-sizing: border-box;
   padding: 1em;
   width: 100%;
@@ -49,6 +48,11 @@ body {
   width: unset;
 }
 
+.bar.right {
+  right: 0;
+  width: unset;
+}
+
 .bar-element {
   margin: 0;
   padding: 0;
@@ -64,6 +68,7 @@ body {
   background-color: transparent;
   color: white;
   font: inherit;
+  text-decoration: none;
 }
 
 .text-button:disabled {
@@ -119,4 +124,28 @@ body {
   font-size: 1rem;
   max-width: 30em;
   padding: 1em;
+}
+
+.finish-popup {
+  display: none;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(100%, 20em);
+  border: 2px solid black;
+  padding: 1em;
+  background-color: white;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.8s;
+}
+
+.finish-popup.shown {
+  display: block;
+  opacity: 0;
+}
+
+.finish-popup.shown2 {
+  opacity: 1;
 }
