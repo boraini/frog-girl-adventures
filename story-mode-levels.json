@@ -1,7 +1,5 @@
 [
     "levels/level1.json",
-    "levels/dcode-maze.json",
-    "levels/level1.json",
-    "levels/dcode-maze.json",
-    "levels/level1.json"
+    "levels/level2.json",
+    "levels/dcode-maze.json"
 ]

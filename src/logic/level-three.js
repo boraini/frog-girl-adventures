@@ -186,7 +186,7 @@ function reset() {
 	this.frogGirl.position.set(
 		tileSize * this.levelInfo.start[0],
 		tileSize * groundHeight,
-		tileSize * this.levelInfo.start[1]
+		tileSize * this.levelInfo.start[2]
 	);
 	this.frogGirl.transformToGirl();
 }

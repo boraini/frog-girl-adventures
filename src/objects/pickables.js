@@ -33,7 +33,9 @@ class Pickable extends Group {
 }
 
 class Blocker extends Pickable {
-	static groundMatrix = new THREE.Matrix4().makeScale(0.3 / 1.6, 0.3 / 1.6, 0.3 / 1.6);
+	static groundMatrix = new THREE.Matrix4()
+	    .makeScale(0.3 / 1.6, 0.3 / 1.6, 0.3 / 1.6)
+		.multiply(new THREE.Matrix4().makeTranslation(0, 1.8, 0));
 	static handMatrix = new THREE.Matrix4();
 	static walkOverBy = [];
 	static destroyAfterPicking = false;
