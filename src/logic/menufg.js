@@ -29,6 +29,11 @@ function onStoryModeButtonClick() {
 	goToPage("levels");
 }
 
+function onStoryModeBackButtonClick() {
+	goToPage("main");
+}
+
 window.onStoryModeButtonClick = onStoryModeButtonClick;
+window.onStoryModeBackButtonClick = onStoryModeBackButtonClick;
 
 export { goToPage, enterMainMenu };

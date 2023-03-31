@@ -4,6 +4,7 @@ import { FrogGirl } from "../objects/frog-girl.js";
 import { Ground } from "../objects/ground.js";
 import { OrbitControls } from "../modules/OrbitControls.js";
 import { levelParameters } from "./globals.js";
+import { Key, Blocker } from "../objects/pickables.js";
 
 function World(levelInfo) {
 	const { tileSize, groundHeight, lilypadHeight } = levelParameters;
@@ -14,6 +15,7 @@ function World(levelInfo) {
 	this.renderer.setClearColor(0x00aaff);
 
 	this.lilypads = [];
+	this.objects = {};
 
 	this.levelCenter = [
 		0.5 * tileSize * (levelInfo.ground.length - 1),
@@ -46,10 +48,11 @@ function World(levelInfo) {
 		tileSize * groundHeight,
 		tileSize * levelInfo.start[1]
 	);
-	this.frogGirl.scale.set(0.3 / 1.6 * tileSize, 0.3 / 1.6 * tileSize, 0.3 / 1.6 * tileSize);
+	this.characterScale = new THREE.Vector3(0.3 / 1.6 * tileSize, 0.3 / 1.6 * tileSize, 0.3 / 1.6 * tileSize);
+	this.frogGirl.scale.copy(this.characterScale);
 	this.scene.add(this.frogGirl);
 
-	var ambientLight = new THREE.AmbientLight(0xffffff, 1);
+	var ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
 	this.scene.add(ambientLight);
 
 	const cd = 4;
@@ -63,14 +66,13 @@ function World(levelInfo) {
 	//this.camera.lookAt(this.lilypads[0].position);
 	this.scene.add(this.camera);
 
-	this.cameraLight = new THREE.PointLight(0xffffff, 1.2);
+	this.cameraLight = new THREE.PointLight(0xffffff, 1);
 	this.cameraLight.position.set(
-		tileSize * levelInfo.ground.length,
-		tileSize * levelInfo.ground.length,
-		0
+		tileSize * 20,
+		tileSize * 20,
+		tileSize * 20
 	);
-	this.cameraLight.lookAt(0, 0, 0);
-	this.scene.add(this.cameraLight);
+	this.camera.add(this.cameraLight);
 
 	this.clock = new THREE.Clock();
 
@@ -150,6 +152,9 @@ function generateTriggers(triggerInfos) {
 		case "key":
 			this.triggers.push(new Key(triggerInfo));
 			break;
+		case "blocker":
+			this.triggers.push(new Blocker(triggerInfo));
+			break;
 		default:
 			console.warn(triggerInfo.type + "is an invalid trigger type");
 		}
@@ -166,6 +171,12 @@ function render() {
 	}
 
 	this.frogGirl.updateAnimation(delta);
+
+	Object.values(this.objects).forEach(obj => {
+		if (!obj.destroyed && obj.updateAnimation) {
+			obj.updateAnimation(delta);
+		}
+	});
 
 	this.renderer.render(this.scene, this.camera);
 }
@@ -203,6 +214,36 @@ function raycast(x, y) {
 	}
 }
 
+function pick(character, node, item) {
+	if (item.destroyAfterPicking) {
+		item.parent.remove(item);
+		item.destroyed = true;
+	} else {
+		const par = character.getObjectByName("handR");
+		const mat = (new THREE.Matrix4()).makeRotationFromEuler(new THREE.Euler(
+			0.5 * Math.PI,
+			0,
+			0.5 * Math.PI, "XYZ"
+		)).multiply(item.handMatrix);
+		mat.decompose(item.position, item.quaternion, item.scale);
+		par.add(item);
+	}
+}
+
+function drop(character, node, item) {
+	const mat = (new THREE.Matrix4()).makeTranslation(
+		node.boundObject.position.x,
+		node.boundObject.groundHeight,
+		node.boundObject.position.z
+	).multiply((new THREE.Matrix4()).copy(item.groundMatrix).scale(new THREE.Vector3(
+		levelParameters.tileSize / 1.6,
+		levelParameters.tileSize / 1.6,
+		levelParameters.tileSize / 1.6
+	)));
+	mat.decompose(item.position, item.quaternion, item.scale);
+	this.scene.add(item);
+}
+
 function resizeHandler(w, h, r) {
 	this.camera.aspect = w / h;
 	this.camera.updateProjectionMatrix();
@@ -218,5 +259,7 @@ World.prototype.render = render;
 World.prototype.resizeHandler = resizeHandler;
 World.prototype.reset = reset;
 World.prototype.raycast = raycast;
+World.prototype.pick = pick;
+World.prototype.drop = drop;
 
 export { World };

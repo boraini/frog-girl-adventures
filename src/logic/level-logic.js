@@ -1,3 +1,5 @@
+import { Pickable, Blocker, Key, Finish } from "../objects/pickables.js";
+import { Boulder } from "../objects/rock.js";
 import { levelParameters } from "./globals.js";
 
 const { Vector3 } = THREE;
@@ -8,6 +10,7 @@ class Node {
 	constructor(boundObject, neighbors = []) {
 		this.boundObject = boundObject;
 		boundObject._node = this;
+		this.item = null;
 		this.neighbors = neighbors;
 		this._previous = null;
 		this._searchID = -1;
@@ -31,8 +34,8 @@ class Node {
 		}
 	}
 
-	isOccupied() {
-		return this.boundObject.isOccupied;
+	isOccupied(form) {
+		return this.item && this.item.walkOverBy.indexOf(form) == -1;
 	}
 
 	heuristic(other) {
@@ -64,7 +67,7 @@ class Node {
 					neighbor._cost = neighborNewCost;
 					neighbor._previous = current;
 					if (
-						!neighbor.isOccupied() &&
+						!neighbor.isOccupied(form) &&
             (formAgnostic || neighbor.allowedForms.includes(form))
 					)
 						traversal.push(neighbor);
@@ -75,7 +78,7 @@ class Node {
 
 		if (found) {
 			let previous =
-        goal.isOccupied() ||
+        goal.isOccupied(form) ||
         (!formAgnostic && !goal.allowedForms.includes(form)) ? goal._previous: goal;
 			const result = [];
 			while (previous) {
@@ -107,6 +110,7 @@ class Level {
 		const groundNodes = [];
 		this.groundNodes = groundNodes;
 		this.groundNodesCompressed = [];
+		this.items = world.objects;
 
 		for (let i = 0; i < levelInfo.ground.length; i++) {
 			groundNodes.push(new Array(levelInfo.ground[i].length));
@@ -188,8 +192,29 @@ class Level {
 			}
 		}
 
-		this.start = groundNodes[levelInfo.start[0]][levelInfo.start[1]];
-		this.finish = groundNodes[levelInfo.finish[0]][levelInfo.finish[1]];
+		for (let object of levelInfo.objects) {
+			const constructors = {
+				"boulder": Boulder,
+				"key": Key,
+				"blocker": Blocker
+			};
+			if (!constructors[object.type]) {
+				console.error(`Object type "${object.type}" unknown, for id ${object.id}.`);
+				continue;
+			}
+			
+			if (object.location instanceof Array) {
+				const object3D = new constructors[object.type](object);
+				this.items[object.id] = object3D;
+			} else {
+				console.error(`Location for id ${object.id} should be specified as [x, don't-care, y] on a ground tile.`);
+			}
+		}
+
+		this.start = groundNodes[levelInfo.start[0]][levelInfo.start[2]];
+		this.finish = groundNodes[levelInfo.finish[0]][levelInfo.finish[2]];
+		const finish3D = new Finish();
+		world.drop(world.frogGirl, this.finish, finish3D);
 
 		this.world = world;
 
@@ -197,11 +222,65 @@ class Level {
 		this.numberOfTransformsLimits = levelInfo.numberOfTransforms;
 
 		this.reset();
+		this.finish.item = finish3D;
 	}
 	reset() {
 		this.position = this.start;
 		this.numberOfTransforms = 0;
 		this.world.reset();
+		for (let node of this.groundNodesCompressed) {
+			node.item = null;
+		}
+		for (let object3D of Object.values(this.items)) {
+			const object = object3D.config;
+			object.destroyed = false;
+			const node = this.groundNodes[object.location[0]][object.location[2]];
+			node.item = object3D;
+			if (object3D.stopAnimation) {
+				object3D.stopAnimation();
+			}
+			this.world.drop(this.world.frogGirl, node, object3D);
+		}
+	}
+	interactWithNode(node, onStateReady) {
+		if (this.world.frogGirl.movesLocked) {
+			onStateReady();
+			return Promise.resolve();
+		}
+		if (node.item) {
+			console.log("node is occupied");
+			const item = node.item;
+			if (!this.world.frogGirl.heldItem) {
+				this.findPath(node).then(
+					path => {
+						if (this.canPick(this.world.frogGirl, item)) this.pick(node);
+						return this.move(path);
+					}
+				).then(
+					() => {
+						if (this.canPick(this.world.frogGirl, item)) {
+							this.world.pick(this.world.frogGirl, node, item);
+							if (item.config.triggers != undefined) {
+								console.log("executing trigger");
+								return this.executeTrigger(node, item);
+							}
+						}
+						return Promise.resolve();
+					}
+				).then(() => {}).catch(err => console.warn(err)).finally(onStateReady);
+			}
+		} else {
+			const item = this.world.frogGirl.heldItem;
+			this.findPath(node).then(
+				path => {
+					if (item) this.drop(node);
+					onStateReady();
+					return this.move(path);
+				}
+			).then(
+				() => item ? this.world.drop(this.world.frogGirl, node, item) : false
+			).catch(err => console.warn(err)).finally(onStateReady);
+		}
 	}
 	raycast(x, y) {
 		const result = this.world.raycast(x, y);
@@ -218,8 +297,10 @@ class Level {
 		}
 	}
 	canTransform() {
-		console.log(this.position.boundObject);
 		return !(this.position.boundObject.type == "Lilypad" || this.world.frogGirl.heldItem);
+	}
+	canPick(character, item) {
+		return item instanceof Pickable && item.pickableBy.indexOf(character.mode) > -1;
 	}
 	transform() {
 		this.numberOfTransforms++;
@@ -228,11 +309,21 @@ class Level {
 
 		return true;
 	}
-	move(node) {
-		if (node == this.position) return false;
+	findPath(node) {
+		if (node == this.position) return Promise.resolve([node]);
+		const item = node.item;
+		if (this.canPick(this.world.frogGirl, item)) node.item = null;
 		const path = this.position.findPath(node, this.world.frogGirl.mode);
+		node.item = item;
 		if (path) {
-			const result = this.world.frogGirl.locomote(
+			return Promise.resolve(path);
+		} else {
+			return Promise.reject("path not found");
+		}
+	}
+	move(path) {
+		if (path) {
+			return this.world.frogGirl.locomoteAsync(
 				path.map(
 					(waypoint) =>
 						new Vector3(
@@ -241,12 +332,39 @@ class Level {
 							waypoint.boundObject.position.z
 						)
 				)
+			).then(
+				() => (this.position = path[path.length - 1], Promise.resolve())
 			);
-			if (result) this.position = path[path.length - 1];
-			return result;
-		} else return false;
+		} else return Promise.reject("path not found");
 	}
-	pick() {}
+	pick(node) {
+		const item = node.item;
+		node.item = null;
+		if (item.destroyAfterPicking) {
+			return false;
+		} else {
+			this.world.frogGirl.heldItem = item;
+		    this.world.frogGirl.lockTransformation();
+			return true;
+		}
+	}
+	drop(node) {
+		const item = this.world.frogGirl.heldItem;
+		node.item = item;
+		this.world.frogGirl.heldItem = null;
+		this.world.frogGirl.unlockTransformation();
+	}
+	executeTrigger(node, item) {
+		if (item.config.triggers == "finish") {
+			this.finished = true;
+			return Promise.resolve("finish");
+		}
+		const otherObject = this.items[item.config.triggers];
+		if (!otherObject) {
+			return Promise.reject(`Other object with id ${item.config.triggers} not found.`);
+		}
+		return otherObject.trigger(this, node, item);
+	}
 }
 
 export { Level, BoundObject };

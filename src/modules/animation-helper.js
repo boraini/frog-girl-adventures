@@ -6,6 +6,8 @@ const {
 	Vector3
 } = THREE;
 
+const RELATIVE_TURNING_DURATION = 0.5;
+
 /**Creates a walking animation, that is, linear translation between the waypoints
  * and smooth rotations in between way segments.
  * 
@@ -32,8 +34,8 @@ function pathAnimation(points, startQuat, speed = 5) {
 		const lookQuat = quaternionLookAt(pos[i], pos[i + 1], new Vector3(0, 1, 0));
 		quatFlat.push(lookQuat.x, lookQuat.y, lookQuat.z, lookQuat.w);
 		quatFlat.push(lookQuat.x, lookQuat.y, lookQuat.z, lookQuat.w);
-		quatTimes.push(total - dur + 1 / speed);
-		quatTimes.push(total - 1 / speed);
+		quatTimes.push(total - dur + RELATIVE_TURNING_DURATION / speed);
+		quatTimes.push(total - RELATIVE_TURNING_DURATION / speed);
 	}
 	for (let vec of pos) {
 		posFlat.push(vec.x, vec.y, vec.z);

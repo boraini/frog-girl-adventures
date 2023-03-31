@@ -2,8 +2,8 @@
   "version": 0,
   "title": "Test/Tutorial Level",
   "description": "Click on rocks and lilypads to walk. Use the Transform button to transform between your human and frog forms.",
-  "start": [0, 0],
-  "finish": [4, 4],
+  "start": [0, 1, 0],
+  "finish": [4, 1, 4],
 	"numberOfTransforms": [1, 2, 3],
   "ground": [
     [1, 1, 1, 1, 1],
@@ -24,18 +24,15 @@
     [1, 2, [4, 2]],
     [3, 4, 1]
   ],
-  "obstacles": [
+  "objects": [
     {
-      "type": "boulder",
       "id": 0,
-      "location": [3, 1, 4],
-      "layer": 1,
-      "rollTo": [1, 1, 4],
-      "blocks": "ground"
-    }
-  ],
-  "triggers": [
+      "type": "boulder",
+      "location": [4, 1, 3],
+      "rollTo": [4, 1, 1]
+    },
     {
+      "id": 1,
       "type": "key",
       "location": [0, 1, 4],
       "triggers": 0
